@@ -10,11 +10,11 @@
 
 set -euo pipefail
 
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
-if command -v module >/dev/null 2>&1; then
-  module load cuda/11.8 || true
+if command -v module >/dev/null 2>&1 && [[ -n "${CUDA_MODULE:-}" ]]; then
+  module load "${CUDA_MODULE}" || true
 fi
 
 if [[ -n "${CONDA_ENV_NAME:-}" ]] && command -v conda >/dev/null 2>&1; then
@@ -29,7 +29,13 @@ export PYTORCH_CUDA_ALLOC_CONF="${PYTORCH_CUDA_ALLOC_CONF:-max_split_size_mb:50}
 LOAD_CKPT="${LOAD_CKPT:-}"
 if [[ -z "$LOAD_CKPT" ]]; then
   echo "ERROR: set LOAD_CKPT to your teacher checkpoint path."
-  echo "Example: LOAD_CKPT=/path/to/checkpoint.pth bash Yixin/sh_yixin/train.sh"
+  echo "Example: LOAD_CKPT=/path/to/teacher.pth bash bash/train.sh"
+  exit 1
+fi
+DATASET_NAME="${DATASET_NAME:-Dur360BEV}"
+DATASET_VERSION="${DATASET_VERSION:-extended}"
+if [[ "$DATASET_VERSION" != "extended" && "$DATASET_VERSION" != "mini" ]]; then
+  echo "ERROR: DATASET_VERSION must be 'extended' or 'mini'."
   exit 1
 fi
 
@@ -44,10 +50,11 @@ python -u "$ROOT_DIR/train_distill.py" \
   --scheduler_type='onecycle' \
   --backbone='effb0_ori' \
   --load_ckpt_dir="$LOAD_CKPT" \
+  --dataset_name="$DATASET_NAME" \
+  --dataset_version="$DATASET_VERSION" \
   --map_scale=2 \
   --gamma=2 \
   --img_freq=20 \
-  --dataset_version='extended' \
   --temperature=4 \
   --dis_type='cwd' \
   --stage='stage3'
