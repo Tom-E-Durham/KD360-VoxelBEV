@@ -1,0 +1,27 @@
+*.ipynb
+*.out
+*.zip
+*.sh
+# !Yixin/sh_yixin/train.sh
+# !Yixin/sh_yixin/teacher_student_train_a100.sh
+# !train_equi.sh
+!train_distill.py
+!bash/*.sh
+
+*.code-workspace
+checkpoints*/
+Yixin/
+
+
+__pycache__/
+durlar360/
+dev*
+log*/
+run*/
+output_imgs/
+test_logs/
+results*
+viz
+
+sbatch/
+My_dataset/

@@ -1,0 +1,22 @@
+# Minimal dependency reference for Distll360BEV training reproduction
+# Target entry: train_distill.py with bash/train.sh
+#
+# Notes:
+# 1) Install PyTorch by following official command for your CUDA/CPU setup:
+#    https://pytorch.org/get-started/locally/
+# 2) fisheye_tools is a project-specific dependency (not from PyPI).
+#    Provide it via local editable install or your own repository.
+
+numpy>=1.24
+fire>=0.7
+tensorboardX>=2.6
+einops>=0.8
+efficientnet-pytorch>=0.7
+opencv-python>=4.8
+requests>=2.28
+
+# Optional (only needed when map features / OSM map pipeline are enabled)
+pandas>=2.0
+matplotlib>=3.4
+geopandas>=0.13
+shapely>=2.0
