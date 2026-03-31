@@ -36,11 +36,11 @@ Reference environment used for training:
 
 ## 4) Dataset and Checkpoint
 
-Dataset and teacher checkpoint will be released via Google Drive:
+Dataset and teacher checkpoint links:
 
-- Extended dataset (Google Drive): `<DATASET_EXTENDED_LINK>`
-- Mini dataset (Google Drive): `<DATASET_MINI_LINK>`
-- Teacher checkpoint (ResNet101 backbone, Google Drive): `<CHECKPOINT_LINK>`
+- Extended Dur360BEV dataset (Hugging Face): [https://huggingface.co/datasets/TomEeee/Dur360BEV-Extended](https://huggingface.co/datasets/TomEeee/Dur360BEV-Extended)
+
+- Teacher checkpoint (ResNet101 backbone, Google Drive): [https://drive.google.com/file/d/1_cbgx4DoA_vmeKOoAcDQAqZdzc2WJrld/view?usp=sharing](https://drive.google.com/file/d/1_cbgx4DoA_vmeKOoAcDQAqZdzc2WJrld/view?usp=sharing)
 
 After download:
 
@@ -52,12 +52,6 @@ export LOAD_CKPT=/path/to/teacher.pth
 ## 5) Run Training (Distilled Student)
 
 From repository root:
-
-```bash
-bash bash/train.sh
-```
-
-or:
 
 ```bash
 LOAD_CKPT=/path/to/teacher.pth bash bash/train.sh
@@ -72,4 +66,34 @@ Default settings in `bash/train.sh`:
   - `stage3`: feature map at the output of the U-Net decoder.
 - `dis_type='cwd'`: distillation loss type.
 - `dataset_name='Dur360BEV'`: dataset source.
-- `dataset_version`: choose `extended` or `mini` (default: `extended`).
+- `dataset_version`: use `extended` (default: `extended`).
+
+## 6) Evaluate Distilled Student
+
+Unified evaluation script:
+
+```bash
+CKPT_PATH=/path/to/student.pth bash bash/eval_student.sh
+```
+
+Required argument:
+
+```bash
+CKPT_PATH=/path/to/student.pth bash bash/eval_student.sh
+```
+
+Common options:
+
+```bash
+# IoU evaluation (default)
+CKPT_PATH=/path/to/student.pth MODE=eval DATASET_VERSION=extended bash bash/eval_student.sh
+
+# Speed benchmark
+CKPT_PATH=/path/to/student.pth MODE=speed REPEATS=30 bash bash/eval_student.sh
+```
+
+Notes:
+
+- `MODE`: `eval` or `speed`
+- `DATASET_VERSION`: use `extended`
+- `DUR360BEV_DATASET_DIR`: set this env var if dataset is not in the default path
